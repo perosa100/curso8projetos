@@ -1,8 +1,14 @@
 import React from 'react'
-import Calculator from './Calculator/Calculator'
+import { TaskManager } from './pages/TaskManager'
+import { BrowserRouter as Router } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
-  return <Calculator />
+  return (
+    <Router>
+      <TaskManager />
+    </Router>
+  )
 }
 
 export default App

@@ -21,8 +21,6 @@ function Calculator() {
       result = concatNumber(numero2, number)
       setNumero2(result)
     }
-    console.log(result)
-
     setTxtNumeros(result)
   }
 

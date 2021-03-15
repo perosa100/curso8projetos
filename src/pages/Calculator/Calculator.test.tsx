@@ -55,6 +55,6 @@ describe('Test Calculator', () => {
     fireEvent.click(getByText('3'))
     fireEvent.click(getByText('='))
 
-    expect(getByTestId('txtNumeros')).toHaveValue('2')
+    expect(getByTestId('txtNumeros')).toHaveValue('6')
   })
 })
