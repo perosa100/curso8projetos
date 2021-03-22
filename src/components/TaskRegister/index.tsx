@@ -2,28 +2,34 @@ import React, { useState } from 'react'
 import { Jumbotron, Form, Button, Modal } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 import { Task } from '../../models/task.model'
+import api from './../../api/api'
 
 const TaskRegister = () => {
   const [task, setTask] = useState('')
   const [formValidation, setFormValidation] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showModalError, setShowModalError] = useState(false)
 
   const history = useHistory()
 
-  const onSubmit = (event: any) => {
+  const onSubmit = async (event: any) => {
     event.preventDefault()
     setFormValidation(true)
     if (event.currentTarget.checkValidity() === true) {
-      const taskDb = localStorage['task']
-      const tasks = taskDb ? JSON.parse(taskDb) : []
-
-      tasks.push(new Task(new Date().getTime(), task, false))
-      localStorage['task'] = JSON.stringify(tasks)
-
-      setShowModal(true)
+      try {
+        const tasks = new Task(null, task, false)
+        await api.post('/manager-task', tasks)
+        setShowModal(true)
+      } catch (error) {
+        setShowModalError(true)
+        console.log(error)
+      }
     }
   }
 
+  const handleCloseModalError = (event: any) => {
+    setShowModalError(false)
+  }
   const handleCloseShowModal = (event: any) => {
     history.push('/')
   }
@@ -76,6 +82,22 @@ const TaskRegister = () => {
               data-testid="bnt-cadastrar"
             >
               Continuar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={showModalError} onHide={handleCloseModalError}>
+          <Modal.Header closeButton>
+            <Modal.Title>Erro</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Erro ao Adicionar Tarefa Tente Novamente!!!</Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="warning"
+              type="submit"
+              onClick={handleCloseModalError}
+              data-testid="bnt-cadastrar"
+            >
+              Fechar
             </Button>
           </Modal.Footer>
         </Modal>

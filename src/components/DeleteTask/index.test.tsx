@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { ItemListTask } from '.'
+import { DeleteTask } from '.'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory, MemoryHistory } from 'history'
@@ -12,18 +12,13 @@ type SutTypes = {
 }
 
 const nameTaks = 'Task'
-const task = new Task(new Date().getTime(), nameTaks, false)
 const taskDone = new Task(new Date().getTime(), nameTaks, true)
 
 const makeSut = (): SutTypes => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   render(
     <Router history={history}>
-      <table>
-        <tbody>
-          <ItemListTask tasks={[taskDone]} LoadingTasks={() => false} />
-        </tbody>
-      </table>
+      <DeleteTask tasks={taskDone} LoadingTasks={() => false} />
     </Router>
   )
   return {
@@ -31,22 +26,26 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe.skip('Test ItemListTask', () => {
+describe.skip('Test DeleteTask', () => {
   it('deve renderizar componente sem erro', () => {
     const div = document.createElement('div')
     makeSut()
     ReactDom.unmountComponentAtNode(div)
   })
 
-  it('deve exibir uma tarefa', () => {
+  it('deve renderizar o modal', () => {
     makeSut()
-    expect(screen.getByTestId('tarefa')).toHaveTextContent(nameTaks)
+    fireEvent.click(screen.getByTestId('btn-abrir-modal'))
+    expect(screen.getByTestId('modal')).toHaveTextContent(nameTaks)
   })
 
-  it('deve exibir uma tarefa concluida', () => {
+  it('deve deletar uma tarefa', () => {
+    localStorage['task'] = JSON.stringify([taskDone])
     makeSut()
-    expect(screen.getByTestId('nome-tarefa')).toHaveStyle(
-      'text-decoration: line-through'
-    )
+    fireEvent.click(screen.getByTestId('btn-abrir-modal'))
+    fireEvent.click(screen.getByTestId('btn-remover'))
+    const taskDb = JSON.parse(localStorage['task'])
+
+    expect(taskDb.length).toBe(0)
   })
 })

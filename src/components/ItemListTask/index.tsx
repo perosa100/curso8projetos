@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import './styles.css'
+import { DoneTask } from '../DoneTask'
+import { DeleteTask } from '../DeleteTask'
 
 export type PropsItemListTask = {
   tasks: {
@@ -29,13 +30,21 @@ const ItemListTask = ({ tasks, LoadingTasks }: PropsItemListTask) => {
           >
             {task.name}
           </td>
-          <td className="text-right" data-testid="nome-tarefa">
+          <td className="text-right" data-testid="">
+            <DoneTask
+              tasks={task}
+              LoadingTasks={LoadingTasks}
+              className={task.done ? 'hidden' : null}
+            />
+            &nbsp;
             <Link
               to={`/update/${task.id}`}
               className={task.done ? 'hidden' : 'btn btn-warning btn-sm'}
             >
               <FontAwesomeIcon icon={faEdit} />
             </Link>
+            &nbsp;
+            <DeleteTask tasks={task} LoadingTasks={LoadingTasks} />
           </td>
         </tr>
       ))}

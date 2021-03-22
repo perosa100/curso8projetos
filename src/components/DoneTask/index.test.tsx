@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { ItemListTask } from '.'
+import { DoneTask } from '.'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory, MemoryHistory } from 'history'
@@ -19,11 +19,11 @@ const makeSut = (): SutTypes => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   render(
     <Router history={history}>
-      <table>
-        <tbody>
-          <ItemListTask tasks={[taskDone]} LoadingTasks={() => false} />
-        </tbody>
-      </table>
+      <DoneTask
+        tasks={taskDone}
+        LoadingTasks={() => false}
+        className={task.done ? 'hidden' : null}
+      />
     </Router>
   )
   return {
@@ -31,22 +31,26 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe.skip('Test ItemListTask', () => {
+describe.skip('Test DoneTask', () => {
   it('deve renderizar componente sem erro', () => {
     const div = document.createElement('div')
     makeSut()
     ReactDom.unmountComponentAtNode(div)
   })
 
-  it('deve exibir uma tarefa', () => {
+  it('deve renderizar o modal', () => {
     makeSut()
-    expect(screen.getByTestId('tarefa')).toHaveTextContent(nameTaks)
+    fireEvent.click(screen.getByTestId('btn-abrir-modal'))
+    expect(screen.getByTestId('modal')).toHaveTextContent(nameTaks)
   })
 
-  it('deve exibir uma tarefa concluida', () => {
+  it('deve concluir uma tarefa', () => {
+    localStorage['task'] = JSON.stringify([taskDone])
     makeSut()
-    expect(screen.getByTestId('nome-tarefa')).toHaveStyle(
-      'text-decoration: line-through'
-    )
+    fireEvent.click(screen.getByTestId('btn-abrir-modal'))
+    fireEvent.click(screen.getByTestId('btn-concluir'))
+    const taskDb = JSON.parse(localStorage['task'])
+
+    expect(taskDb[0].done).toBeTruthy()
   })
 })

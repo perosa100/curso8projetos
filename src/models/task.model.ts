@@ -1,7 +1,7 @@
 class Task {
-  private id: number
-  private name: string
-  private done: boolean
+  id: number
+  name: string
+  done: boolean
 
   constructor(id: number, name: string, done: boolean) {
     this.id = id
