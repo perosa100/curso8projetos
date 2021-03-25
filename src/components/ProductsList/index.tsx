@@ -2,6 +2,7 @@ import { Card, Button } from 'react-bootstrap'
 import {} from 'react-bootstrap'
 import api from '../../api/api'
 import { useEffect, useState } from 'react'
+import { ProductsPropsTypePrice } from '../../pages/MiniEcommerce'
 
 export type ProductsPropsType = {
   id: number
@@ -13,8 +14,8 @@ export type ProductsPropsType = {
 }
 
 type ProductsListProps = {
-  addProduct: (arg: string) => void
-  showMessage: (arg: string) => void
+  addProduct: (args: ProductsPropsTypePrice) => void
+  showMessage: (args: string) => void
 }
 
 const ProductsList = ({ addProduct, showMessage }: ProductsListProps) => {
@@ -25,7 +26,6 @@ const ProductsList = ({ addProduct, showMessage }: ProductsListProps) => {
       try {
         const productsList = await api.get('/mini-ecommerces/products')
         setproducts(productsList.data)
-        console.log(productsList.data)
       } catch (error) {
         console.log(error)
       }
@@ -33,10 +33,13 @@ const ProductsList = ({ addProduct, showMessage }: ProductsListProps) => {
     getProducts()
   }, [])
 
-  const handleBuy = (event: React.MouseEvent<HTMLElement>, product: string) => {
+  const handleBuy = (
+    event: React.MouseEvent<HTMLElement>,
+    product: ProductsPropsType
+  ) => {
     event.preventDefault()
     addProduct(product)
-    showMessage(product)
+    showMessage(product.title)
   }
 
   const render = () => {
@@ -53,10 +56,10 @@ const ProductsList = ({ addProduct, showMessage }: ProductsListProps) => {
             variant="success"
             style={{ width: '100%' }}
             onClick={(event) => {
-              handleBuy(event, product.title)
+              handleBuy(event, product)
             }}
           >
-            Comprar
+            Comprar {`(R$ ${product.price})`}
           </Button>
         </Card.Body>
       </Card>

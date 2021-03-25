@@ -2,15 +2,17 @@ import { ProductsList } from '..'
 import { Alert } from 'react-bootstrap'
 import { useState } from 'react'
 import './styles.css'
+import { ProductsPropsTypePrice } from '../../../pages/MiniEcommerce'
 
 type ProductsProps = {
-  addProduct: (args: string) => void
+  addProduct: (args: ProductsPropsTypePrice) => void
   visivel: boolean
 }
 
 const Products = ({ addProduct, visivel }: ProductsProps) => {
   const [showMsg, setShowMsg] = useState(false)
   const [product, setProduct] = useState('')
+
   const visible = () => {
     return visivel ? null : 'hidden'
   }
