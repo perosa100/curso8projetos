@@ -4,10 +4,8 @@ import { CheckOut } from '../../components/CheckOut'
 import { Menu } from '../../components/Menu'
 import { NavBar } from '../../components/NavBar'
 import { Products } from '../../components/ProductsList/Products'
-import { Dashboard } from '../Dashboard'
 import { Footer } from '../Footer'
-import { Orders } from '../Orders'
-import { Register } from '../Register'
+
 export type ProductsPropsTypePrice = {
   id?: number
   title: string
@@ -16,7 +14,7 @@ export type ProductsPropsTypePrice = {
 const MiniEcommerce = () => {
   const [cart, setCart] = useState({ products: [] })
   const [showProducts, setShowProducts] = useState(true)
-  const [showCheckOut, setShowCheckOut] = useState(true)
+  const [showCheckOut, setShowCheckOut] = useState(false)
   const [total, setTotal] = useState('0,00')
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -55,6 +53,10 @@ const MiniEcommerce = () => {
     setTotal(total)
   }
 
+  const handleResetCar = () => {
+    setCart({ products: [] })
+  }
+
   return (
     <Container fluid>
       <Row xs={12}>
@@ -74,10 +76,17 @@ const MiniEcommerce = () => {
             handleListItemClick={handleListItemClick}
           />
         </Col>
+
         <Col xs={10}>
           <Products visivel={showProducts} addProduct={addProduct} />
 
-          <CheckOut />
+          <CheckOut
+            visivel={showCheckOut}
+            handleShowProducts={handleShowProducts}
+            total={total}
+            products={cart}
+            handleResetCar={handleResetCar}
+          />
         </Col>
       </Row>
 

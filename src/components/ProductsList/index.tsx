@@ -48,7 +48,11 @@ const ProductsList = ({ addProduct, showMessage }: ProductsListProps) => {
         style={{ width: '18rem', margin: '10px', float: 'left' }}
         key={product.id}
       >
-        <Card.Img variant="top" src={product.image} />
+        <Card.Img
+          variant="top"
+          src={product.image}
+          style={{ width: '200px', height: '150px' }}
+        />
         <Card.Body className="text-center">
           <Card.Title style={{ height: '40px' }}>{product.title}</Card.Title>
           <Card.Text>{product.description}</Card.Text>
